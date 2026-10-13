@@ -36,8 +36,8 @@ export function toHex(u8) {
     for (let i = 0; i < u8.length; i++) out += u8[i].toString(16).padStart(2, '0');
     return out;
 }
-export function utf8(str)     { return _enc.encode(str); }
-export function fromUtf8(u8)  { return _dec.decode(u8); }
+export function utf8(str)    { return _enc.encode(str); }
+export function fromUtf8(u8) { return _dec.decode(u8); }
 
 export function concatBytes(...arrays) {
     let len = 0;
@@ -105,8 +105,6 @@ export async function aesDecrypt(rawKey32, nonce, ct, aad) {
 
 // ---------- ECDH (P-256) ----------
 export async function generateEcKeypair() {
-    // Приватный ключ потом шифруется мастер-паролем и лежит в IndexedDB.
-    // Публичный — публикуется на сервер под нашим ID.
     return crypto.subtle.generateKey(
         { name: 'ECDH', namedCurve: 'P-256' },
         true,
@@ -139,13 +137,11 @@ export async function ecdhSharedSecret(privKey, pubKey) {
     return new Uint8Array(bits);
 }
 
-// ---------- Ключ беседы (главная функция!) ----------
-// Требует: ECDH-секрет + общий пароль обмена.
-// Меняешь хоть один символ пароля → ключ полностью другой.
+// ---------- Ключ беседы ----------
 export async function deriveConversationKey(myPriv, theirPubRaw, sharedPassword, myId, theirId) {
-    const theirPub    = await importEcPublic(theirPubRaw);
-    const ecdhSecret  = await ecdhSharedSecret(myPriv, theirPub);
-    const pwBytes     = utf8(sharedPassword);
+    const theirPub   = await importEcPublic(theirPubRaw);
+    const ecdhSecret = await ecdhSharedSecret(myPriv, theirPub);
+    const pwBytes    = utf8(sharedPassword);
 
     const ikm  = concatBytes(ecdhSecret, pwBytes);
     const [idA, idB] = [myId, theirId].sort();
@@ -181,7 +177,6 @@ export function constantTimeEqual(a, b) {
     return diff === 0;
 }
 
-// Проверка, что WebCrypto доступен
 export function checkCryptoAvailable() {
     if (!window.crypto || !window.crypto.subtle) {
         throw new Error('WebCrypto недоступен. Нужен HTTPS и современный браузер.');
