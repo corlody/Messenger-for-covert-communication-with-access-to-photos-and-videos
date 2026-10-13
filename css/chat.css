@@ -1,0 +1,420 @@
+/* css/chat.css */
+/* Экран чата, лента сообщений, бар ввода, камера, просмотр медиа */
+
+/* ===== Экран чата ===== */
+#screen-chat {
+    display: none;
+    flex-direction: column;
+    height: 100vh;
+    position: fixed;
+    inset: 0;
+    z-index: 2;
+    background: rgba(0,0,0,0.5);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+}
+#screen-chat.active { display: flex; }
+
+.chat-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 16px;
+    background: var(--c6);
+    border-bottom: 1px solid var(--c5);
+    flex-shrink: 0;
+}
+.chat-back {
+    padding: 8px 14px;
+    border-radius: 10px;
+    border: 1px solid var(--c5);
+    background: transparent;
+    color: var(--c1);
+    font-size: 20px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: 0.2s;
+    line-height: 1;
+}
+.chat-back:active { transform: scale(0.92); }
+.chat-header-info { flex: 1; min-width: 0; }
+.chat-header-name {
+    font-size: 17px;
+    font-weight: 800;
+    color: var(--c1);
+    letter-spacing: 0.5px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.chat-header-status {
+    font-size: 11px;
+    font-family: ui-monospace, Menlo, monospace;
+    color: var(--text-dim);
+    letter-spacing: 1px;
+    margin-top: 2px;
+}
+
+.chat-messages {
+    flex: 1;
+    overflow-y: auto;
+    padding: 16px 14px 16px 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    scroll-behavior: smooth;
+    overscroll-behavior: contain;
+}
+.chat-empty {
+    text-align: center;
+    padding: 60px 20px;
+    font-size: 13px;
+    color: var(--text-dim);
+    line-height: 1.8;
+}
+
+/* ===== День разделитель ===== */
+.day-sep {
+    align-self: center;
+    padding: 4px 14px;
+    border-radius: 12px;
+    font-size: 11px;
+    letter-spacing: 1px;
+    background: rgba(0,0,0,0.4);
+    color: var(--text-dim);
+    margin: 6px 0;
+    font-family: ui-monospace, Menlo, monospace;
+    border: 1px solid var(--c5);
+}
+
+/* ===== Сообщение ===== */
+.msg {
+    display: flex;
+    flex-direction: column;
+    max-width: 82%;
+    animation: msgIn 0.3s cubic-bezier(0.34,1.4,0.64,1);
+    position: relative;
+}
+@keyframes msgIn {
+    from { opacity: 0; transform: translateY(8px) scale(0.96); }
+    to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+.msg.out { align-self: flex-end; align-items: flex-end; }
+.msg.in  { align-self: flex-start; align-items: flex-start; }
+
+.msg-body {
+    padding: 10px 14px;
+    border-radius: 16px;
+    font-size: 15px;
+    line-height: 1.5;
+    word-break: break-word;
+    position: relative;
+    border: 1px solid;
+    max-width: 100%;
+    white-space: pre-wrap;
+}
+.msg.out .msg-body {
+    background: var(--c3);
+    color: var(--c8);
+    border-color: var(--c3);
+    border-bottom-right-radius: 4px;
+    box-shadow: 0 3px 12px var(--c9);
+}
+.msg.in .msg-body {
+    background: var(--c7);
+    color: var(--c2);
+    border-color: var(--c5);
+    border-bottom-left-radius: 4px;
+}
+.msg-body.media {
+    padding: 5px;
+    max-width: 320px;
+    overflow: hidden;
+}
+.msg-body.media img,
+.msg-body.media video {
+    display: block;
+    width: 100%;
+    max-height: 380px;
+    border-radius: 12px;
+    cursor: pointer;
+    object-fit: cover;
+    background: #000;
+}
+.msg-body.media video { background: #000; }
+
+.play-overlay {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 54px; height: 54px;
+    border-radius: 50%;
+    background: rgba(0,0,0,0.55);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+    pointer-events: none;
+    backdrop-filter: blur(4px);
+    border: 2px solid rgba(255,255,255,0.4);
+}
+
+.msg-meta {
+    font-size: 10px;
+    opacity: 0.6;
+    margin-top: 3px;
+    padding: 0 6px;
+    font-family: ui-monospace, Menlo, monospace;
+    color: var(--text-dim);
+}
+.msg-actions {
+    display: none;
+    gap: 4px;
+    margin-top: 4px;
+    padding: 0 4px;
+}
+.msg:hover .msg-actions,
+.msg:focus-within .msg-actions { display: flex; }
+.msg-actions button {
+    padding: 4px 9px;
+    font-size: 11px;
+    border-radius: 7px;
+    background: rgba(0,0,0,0.4);
+    color: var(--c2);
+    border: 1px solid var(--c5);
+    cursor: pointer;
+    transition: 0.15s;
+}
+.msg-actions button:hover { border-color: var(--c3); }
+.msg-actions button.del { color: #FCA5A5; border-color: rgba(220,38,38,0.4); }
+
+/* ===== Бар ввода ===== */
+.chat-input-bar {
+    display: flex;
+    gap: 8px;
+    padding: 10px 12px 14px 12px;
+    background: var(--c6);
+    border-top: 1px solid var(--c5);
+    flex-shrink: 0;
+    position: relative;
+    padding-bottom: max(14px, env(safe-area-inset-bottom));
+}
+.attach-btn,
+.send-btn {
+    width: 44px; height: 44px;
+    border-radius: 12px;
+    border: none;
+    font-size: 20px;
+    cursor: pointer;
+    transition: 0.2s;
+    flex-shrink: 0;
+}
+.attach-btn {
+    background: var(--c7);
+    color: var(--c2);
+    border: 1px solid var(--c5);
+}
+.send-btn {
+    background: linear-gradient(135deg, var(--c3), var(--c4));
+    color: var(--c8);
+    font-weight: 800;
+    box-shadow: 0 4px 15px var(--c9);
+}
+.attach-btn:active, .send-btn:active { transform: scale(0.92); }
+
+#chatInput {
+    flex: 1;
+    padding: 12px 16px;
+    border-radius: 12px;
+    border: 1px solid var(--c5);
+    background: var(--c7);
+    color: var(--c2);
+    font-size: 15px;
+    font-family: inherit;
+}
+#chatInput:focus {
+    outline: none;
+    border-color: var(--c3);
+    box-shadow: 0 0 15px var(--c9);
+}
+#chatInput::placeholder { color: rgba(167,243,208,0.4); }
+
+/* ===== Меню вложений ===== */
+.attach-menu {
+    position: absolute;
+    bottom: 100%;
+    left: 12px;
+    right: 12px;
+    margin-bottom: 8px;
+    background: var(--c6);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid var(--c5);
+    border-radius: 14px;
+    padding: 8px;
+    display: none;
+    flex-direction: column;
+    gap: 2px;
+    box-shadow: 0 -10px 40px rgba(0,0,0,0.5);
+    animation: fadeIn 0.2s ease;
+}
+.attach-menu.show { display: flex; }
+.attach-menu button {
+    padding: 12px 14px;
+    border-radius: 10px;
+    background: transparent;
+    border: none;
+    color: var(--c2);
+    font-size: 14px;
+    font-weight: 600;
+    text-align: left;
+    cursor: pointer;
+    transition: 0.15s;
+}
+.attach-menu button:hover { background: rgba(255,255,255,0.06); }
+
+/* ===== Камера ===== */
+.camera-modal {
+    position: fixed;
+    inset: 0;
+    z-index: 9997;
+    background: #000;
+    display: none;
+    overflow: hidden;
+}
+.camera-modal.show { display: block; }
+#camPreview {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+.cam-top {
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    padding: 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 2;
+    background: linear-gradient(180deg, rgba(0,0,0,0.6), transparent);
+}
+.cam-mode-label {
+    color: #fff;
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    padding: 6px 12px;
+    background: rgba(0,0,0,0.4);
+    border-radius: 10px;
+    font-family: ui-monospace, Menlo, monospace;
+}
+.cam-close {
+    width: 40px; height: 40px;
+    border-radius: 50%;
+    background: rgba(0,0,0,0.5);
+    color: #fff;
+    border: none;
+    font-size: 18px;
+    cursor: pointer;
+    transition: 0.2s;
+}
+.cam-close:active { transform: scale(0.9); }
+
+.cam-bottom {
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    padding: 20px 24px calc(30px + env(safe-area-inset-bottom));
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 2;
+    background: linear-gradient(0deg, rgba(0,0,0,0.7), transparent);
+}
+.cam-shutter {
+    width: 76px; height: 76px;
+    border-radius: 50%;
+    background: #fff;
+    border: 4px solid rgba(255,255,255,0.5);
+    color: #d32f2f;
+    font-size: 24px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: 0.15s;
+    box-shadow: 0 0 30px rgba(255,255,255,0.3);
+}
+.cam-shutter:active { transform: scale(0.9); }
+.cam-shutter.recording { background: #d32f2f; color: #fff; }
+.cam-switch,
+.cam-spacer {
+    width: 52px; height: 52px;
+    border-radius: 50%;
+    background: rgba(0,0,0,0.5);
+    border: 2px solid rgba(255,255,255,0.4);
+    color: #fff;
+    font-size: 22px;
+    cursor: pointer;
+    transition: 0.2s;
+    display: flex; align-items: center; justify-content: center;
+}
+.cam-switch:active { transform: scale(0.9) rotate(180deg); }
+.cam-spacer { background: transparent; border: none; pointer-events: none; }
+
+/* ===== Просмотр медиа ===== */
+.media-viewer {
+    position: fixed;
+    inset: 0;
+    z-index: 9996;
+    background: rgba(0,0,0,0.96);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    padding: 20px;
+    gap: 14px;
+}
+.media-viewer.show { display: flex; }
+.media-viewer-body {
+    max-width: 100%;
+    max-height: 75vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.media-viewer-body img,
+.media-viewer-body video {
+    max-width: 100%;
+    max-height: 75vh;
+    border-radius: 12px;
+    box-shadow: 0 0 60px rgba(0,0,0,0.8);
+}
+.media-viewer-meta {
+    color: #ddd;
+    font-size: 12px;
+    text-align: center;
+    letter-spacing: 1px;
+    font-family: ui-monospace, Menlo, monospace;
+}
+.media-viewer-btns { display: flex; gap: 10px; }
+.mv-download {
+    padding: 11px 22px;
+    border-radius: 11px;
+    background: var(--c3);
+    color: var(--c8);
+    border: none;
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    cursor: pointer;
+    transition: 0.2s;
+}
+.mv-download:active { transform: scale(0.95); }
+
+@media (max-width: 480px) {
+    .msg { max-width: 90%; }
+    .msg-body.media img,
+    .msg-body.media video { max-height: 300px; }
+    .chat-messages { padding: 12px 10px; }
+    .cam-shutter { width: 66px; height: 66px; }
+}

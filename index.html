@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="theme-color" content="#0a0a1a">
+<title>Хана-Кото</title>
+<link rel="manifest" href="manifest.json">
+<link rel="stylesheet" href="css/main.css">
+<link rel="stylesheet" href="css/scenes.css">
+<link rel="stylesheet" href="css/chat.css">
+</head>
+<body class="dark" data-scene="school">
+
+<!-- ============ ФОН ============ -->
+<div class="background">
+    <div class="sun"></div>
+    <div class="sun-rays">
+        <div class="ray"></div><div class="ray"></div><div class="ray"></div>
+        <div class="ray"></div><div class="ray"></div><div class="ray"></div>
+        <div class="ray"></div><div class="ray"></div><div class="ray"></div>
+        <div class="ray"></div><div class="ray"></div><div class="ray"></div>
+    </div>
+    <div class="moon">
+        <div class="crater"></div><div class="crater"></div><div class="crater"></div>
+        <div class="crater"></div><div class="crater"></div>
+    </div>
+    <div class="stars" id="stars"></div>
+    <div class="clouds" id="clouds"></div>
+
+    <div class="scene scene-school" data-scene="school">
+        <div class="s-wall"></div>
+        <div class="s-window"><div class="s-cloud"></div><div class="s-cloud c2"></div></div>
+        <div class="s-floor"></div>
+        <div class="s-student"></div><div class="s-student s2"></div>
+    </div>
+    <div class="scene scene-sky" data-scene="sky">
+        <div class="sky-stars"></div>
+        <div class="sky-branch"><div class="sky-leaf"></div><div class="sky-leaf"></div><div class="sky-leaf"></div><div class="sky-leaf"></div><div class="sky-leaf"></div><div class="sky-leaf"></div></div>
+        <div class="sky-leg"><div class="jeans"></div><div class="leg"></div><div class="foot"></div></div>
+        <div class="shooting-star"></div><div class="shooting-star s2"></div>
+    </div>
+    <div class="scene scene-room" data-scene="room">
+        <div class="room-wall"></div>
+        <div class="room-window"><div class="room-city-lights"></div></div>
+        <div class="room-desk"></div>
+        <div class="room-monitor"></div>
+        <div class="room-guy"><div class="guy-body"></div><div class="guy-head"></div></div>
+        <div class="room-coffee"></div>
+    </div>
+    <div class="scene scene-forest" data-scene="forest">
+        <div class="forest-fog"></div>
+        <div class="forest-trees" id="forestTrees"></div>
+        <div class="rain-drops" id="rainDrops"></div>
+    </div>
+    <div class="scene scene-city" data-scene="city">
+        <div class="city-stars"></div>
+        <div class="city-buildings">
+            <div class="bldg h1"></div><div class="bldg h4"></div><div class="bldg h2"></div><div class="bldg h6"></div>
+            <div class="bldg h3"></div><div class="bldg h5"></div><div class="bldg h7"></div><div class="bldg h8"></div>
+        </div>
+        <div class="city-neon"></div><div class="city-neon n2"></div><div class="city-neon n3"></div>
+        <div class="city-flyer"></div><div class="city-flyer f2"></div><div class="city-flyer f3"></div>
+    </div>
+</div>
+
+<!-- ============ ЗАСТАВКА ============ -->
+<div class="splash" id="splash">
+    <div class="splash-rain" id="splashRain"></div>
+    <div class="splash-corner tl"></div><div class="splash-corner tr"></div>
+    <div class="splash-corner bl"></div><div class="splash-corner br"></div>
+    <div class="splash-scan"></div>
+    <div class="splash-rings">
+        <div class="splash-ring r5"></div><div class="splash-ring r4"></div><div class="splash-ring r3"></div>
+        <div class="splash-ring r2"></div><div class="splash-ring r1"></div>
+    </div>
+    <div class="splash-center">🔐</div>
+    <div class="splash-text-wrap">
+        <div class="splash-text">Хана-Кото</div>
+        <div class="splash-sub">E2E · AES-256 · ECDH P-256</div>
+    </div>
+</div>
+
+<!-- ============ ЭКРАН АУТЕНТИФИКАЦИИ ============ -->
+<div class="screen" id="screen-auth">
+    <div class="auth-box">
+        <div class="auth-icon">🔐</div>
+        <div class="auth-title">Хана-Кото</div>
+        <div class="auth-sub" id="authSub">Создание новой личности</div>
+
+        <div id="storedIdBlock" style="display:none">
+            <div class="auth-stored-label">Ваш ID</div>
+            <div class="auth-stored-id" id="storedIdPreview">--------</div>
+        </div>
+
+        <input type="password" id="authPwd" class="auth-input" placeholder="Мастер-пароль" autocomplete="off">
+        <input type="password" id="authPwd2" class="auth-input" placeholder="Повторите пароль" autocomplete="off">
+
+        <div class="auth-err" id="authErr"></div>
+        <div class="auth-hint" id="authHint">Придумайте надёжный пароль. Восстановления нет.</div>
+
+        <button class="auth-btn" id="authBtn">✨ Создать</button>
+    </div>
+</div>
+
+<!-- ============ ГЛАВНЫЙ ЭКРАН ============ -->
+<div class="screen" id="screen-main">
+    <div class="container">
+        <div class="main-header">
+            <h1 id="mainTitle">🛡️ Хана-Кото</h1>
+            <div class="conn-status offline" id="connStatus">○ оффлайн</div>
+        </div>
+        <div class="subtitle" id="mainSubtitle">E2E-шифрование · без облака</div>
+
+        <div class="theme-toggle">
+            <button id="themeLight">☀️ Светлая</button>
+            <button id="themeDark" class="active-dark">🌙 Тёмная</button>
+        </div>
+
+        <div class="tab-bar">
+            <button class="tab-btn active" data-tab="chats">💬 Чаты</button>
+            <button class="tab-btn" data-tab="kana">🈶 Хана-Кото</button>
+            <button class="tab-btn" data-tab="settings">⚙️</button>
+        </div>
+
+        <!-- ===== Таб: Чаты ===== -->
+        <div class="tab-content" id="tab-chats">
+            <div class="my-id-card">
+                <div>
+                    <div class="my-id-label">Ваш ID для других</div>
+                    <div class="my-id" id="myIdDisplay">--------</div>
+                </div>
+                <button class="copy-id-btn" id="copyMyIdBtn" title="Копировать">📋</button>
+            </div>
+
+            <div class="contacts-header">
+                <span>Контакты</span>
+                <button class="add-contact-btn" id="addContactBtn">+ Добавить</button>
+            </div>
+
+            <div class="contacts-list" id="contactsList">
+                <div class="contacts-empty">Пока нет контактов.</div>
+            </div>
+        </div>
+
+        <!-- ===== Таб: Хана-Кото ===== -->
+        <div class="tab-content" id="tab-kana" style="display:none">
+            <div class="kana-modes">
+                <button class="kana-mode active" id="kanaModeEncode">📝 В кану</button>
+                <button class="kana-mode" id="kanaModeDecode">🔓 Из каны</button>
+            </div>
+            <textarea id="kanaInput" placeholder="Введите текст..."></textarea>
+            <div class="btn-row">
+                <button class="btn-primary" id="kanaTranslate">🔄 Перевести</button>
+                <button class="btn-secondary" id="kanaClear">🗑️ Очистить</button>
+            </div>
+            <div class="result-box">
+                <div class="result-text placeholder" id="kanaOutput">Здесь появится результат...</div>
+            </div>
+            <button class="btn-secondary" id="kanaCopy">📋 Копировать</button>
+        </div>
+
+        <!-- ===== Таб: Настройки ===== -->
+        <div class="tab-content" id="tab-settings" style="display:none">
+            <div class="settings-block">
+                <div class="settings-label">Фоновая сцена</div>
+                <div class="theme-picker">
+                    <button class="scene-dot active" data-scene="school" title="Школа">🏫</button>
+                    <button class="scene-dot" data-scene="sky" title="Небо">🌌</button>
+                    <button class="scene-dot" data-scene="room" title="Комната">💻</button>
+                    <button class="scene-dot" data-scene="forest" title="Лес">🌲</button>
+                    <button class="scene-dot" data-scene="city" title="Город">🌃</button>
+                </div>
+            </div>
+
+            <div class="settings-block">
+                <div class="settings-label">Об этой версии</div>
+                <div class="settings-info">
+                    <div>Версия: 3.0.0</div>
+                    <div>Шифрование: AES-256-GCM</div>
+                    <div>Обмен ключами: ECDH P-256</div>
+                    <div>KDF: PBKDF2 · 250 000 итераций</div>
+                </div>
+            </div>
+
+            <div class="settings-block">
+                <div class="settings-label">Опасная зона</div>
+                <button class="btn-danger" id="wipeBtn">🗑️ УДАЛИТЬ ВСЁ</button>
+                <div class="settings-warning">Стирает личность, контакты, сообщения. Навсегда.</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ============ ЭКРАН ЧАТА ============ -->
+<div class="screen" id="screen-chat">
+    <div class="chat-header">
+        <button class="chat-back" id="chatBack">←</button>
+        <div class="chat-header-info">
+            <div class="chat-header-name" id="chatName">—</div>
+            <div class="chat-header-status" id="chatStatus">—</div>
+        </div>
+    </div>
+
+    <div class="chat-messages" id="chatMessages"></div>
+
+    <div class="chat-input-bar">
+        <button class="attach-btn" id="attachBtn">📎</button>
+        <input type="text" id="chatInput" placeholder="Сообщение..." autocomplete="off">
+        <button class="send-btn" id="sendBtn">➤</button>
+    </div>
+
+    <div class="attach-menu" id="attachMenu">
+        <button data-action="photo">📷 Фото</button>
+        <button data-action="video">🎥 Видео</button>
+        <button data-action="gallery-photo">🖼️ Фото из галереи</button>
+        <button data-action="gallery-video">🎬 Видео из галереи</button>
+    </div>
+</div>
+
+<!-- ============ МОДАЛКА: ДОБАВИТЬ КОНТАКТ ============ -->
+<div class="modal-overlay" id="addContactModal">
+    <div class="modal-box">
+        <div class="modal-title">Новый контакт</div>
+        <div class="modal-sub">Попроси друга скинуть ID и пароль обмена через Телеграм</div>
+
+        <input type="text" id="acUserId" class="modal-input" placeholder="ID друга (8 символов)" maxlength="8" autocomplete="off">
+        <input type="text" id="acName" class="modal-input" placeholder="Имя (как называть)" maxlength="24" autocomplete="off">
+        <input type="text" id="acPassword" class="modal-input" placeholder="Пароль обмена" autocomplete="off">
+        <button class="modal-btn-ghost" id="acGenPwd">🎲 Сгенерировать пароль обмена</button>
+
+        <div class="modal-err" id="acErr"></div>
+
+        <div class="modal-btns">
+            <button class="modal-btn cancel" id="acClose">Отмена</button>
+            <button class="modal-btn ok" id="acSave">Сохранить</button>
+        </div>
+    </div>
+</div>
+
+<!-- ============ МОДАЛКА: PIN ============ -->
+<div class="modal-overlay" id="pinModal">
+    <div class="modal-box">
+        <div class="modal-icon">🔑</div>
+        <div class="modal-title">PIN-код</div>
+        <div class="modal-sub" id="pinSub">Введите PIN для просмотра сообщений</div>
+        <input type="password" id="pinInput" class="modal-input pin" placeholder="••••" maxlength="4" inputmode="numeric" autocomplete="off">
+        <div class="modal-err" id="pinErr"></div>
+        <div class="modal-btns">
+            <button class="modal-btn cancel" id="pinCancel">Отмена</button>
+            <button class="modal-btn ok" id="pinOk">OK</button>
+        </div>
+    </div>
+</div>
+
+<!-- ============ МОДАЛКА: КАМЕРА ============ -->
+<div class="camera-modal" id="cameraModal">
+    <video id="camPreview" autoplay playsinline muted></video>
+    <div class="cam-top">
+        <div class="cam-mode-label" id="camModeLabel">📷 Фото</div>
+        <button class="cam-close" id="camClose">✕</button>
+    </div>
+    <div class="cam-bottom">
+        <button class="cam-switch" id="camSwitch">🔄</button>
+        <button class="cam-shutter" id="camShutter">●</button>
+        <div class="cam-spacer"></div>
+    </div>
+</div>
+
+<!-- ============ ПРОСМОТР МЕДИА ============ -->
+<div class="media-viewer" id="mediaViewer">
+    <div class="media-viewer-body" id="mediaViewerBody"></div>
+    <div class="media-viewer-meta" id="mediaViewerMeta"></div>
+    <div class="media-viewer-btns">
+        <button class="mv-download" id="mediaViewerDownload">💾 Скачать</button>
+    </div>
+</div>
+
+<!-- ============ TOAST ============ -->
+<div class="toast" id="toast"></div>
+
+<script type="module" src="js/app.js"></script>
+</body>
+</html>

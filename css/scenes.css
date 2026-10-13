@@ -1,0 +1,447 @@
+/* css/scenes.css */
+/* Фоновые сцены. Показываются только когда у body класс .secure + scene-* */
+
+.scene {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    transition: opacity 1s ease;
+    overflow: hidden;
+    pointer-events: none;
+    z-index: 1;
+}
+body .scene.active { opacity: 1; }
+
+/* Применяем палитру сцены к CSS-переменным */
+body[data-scene="school"].secure {
+    --c1: #FCD34D; --c2: #FEF3C7; --c3: #F59E0B; --c4: #FBBF24;
+    --c5: rgba(245,158,11,0.3); --c6: rgba(35,25,10,0.6);
+    --c7: rgba(20,15,4,0.72); --c8: #1a1305; --c9: rgba(245,158,11,0.5);
+}
+body[data-scene="sky"].secure {
+    --c1: #C4B5FD; --c2: #DDD6FE; --c3: #8B5CF6; --c4: #A78BFA;
+    --c5: rgba(139,92,246,0.3); --c6: rgba(30,15,50,0.55);
+    --c7: rgba(20,10,40,0.72); --c8: #0a0518; --c9: rgba(139,92,246,0.5);
+}
+body[data-scene="room"].secure {
+    --c1: #C4B5FD; --c2: #E9D5FF; --c3: #8B5CF6; --c4: #A78BFA;
+    --c5: rgba(139,92,246,0.3); --c6: rgba(25,10,45,0.55);
+    --c7: rgba(15,5,30,0.78); --c8: #0a0518; --c9: rgba(100,180,255,0.5);
+}
+body[data-scene="forest"].secure {
+    --c1: #6EE7B7; --c2: #A7F3D0; --c3: #10B981; --c4: #34D399;
+    --c5: rgba(16,185,129,0.28); --c6: rgba(8,30,24,0.55);
+    --c7: rgba(4,20,15,0.72); --c8: #041a14; --c9: rgba(16,185,129,0.5);
+}
+body[data-scene="city"].secure {
+    --c1: #67E8F9; --c2: #CFFAFE; --c3: #06B6D4; --c4: #22D3EE;
+    --c5: rgba(6,182,212,0.3); --c6: rgba(5,20,30,0.55);
+    --c7: rgba(2,12,20,0.78); --c8: #011014; --c9: rgba(6,182,212,0.5);
+}
+
+/* ============ ШКОЛА ============ */
+.scene-school { background: linear-gradient(180deg, #3a2c1a 0%, #241811 60%, #150d08 100%); }
+.s-wall {
+    position: absolute; inset: 0;
+    background:
+        linear-gradient(180deg, rgba(60,45,25,0.35) 0%, rgba(40,28,15,0.6) 100%),
+        repeating-linear-gradient(90deg, transparent 0, transparent 120px, rgba(0,0,0,0.06) 120px, rgba(0,0,0,0.06) 122px);
+}
+.s-window {
+    position: absolute; top: 14%; left: 8%;
+    width: 34%; height: 42%;
+    background: linear-gradient(180deg, #7DB8DC 0%, #4A88B8 100%);
+    border: 6px solid #2a1e10;
+    box-shadow: inset 0 0 40px rgba(0,0,0,0.5);
+    overflow: hidden;
+}
+.s-window::before, .s-window::after { content: ''; position: absolute; background: #2a1e10; }
+.s-window::before { top: 50%; left: 0; right: 0; height: 4px; transform: translateY(-50%); }
+.s-window::after { left: 50%; top: 0; bottom: 0; width: 4px; transform: translateX(-50%); }
+.s-cloud {
+    position: absolute; width: 55px; height: 16px;
+    background: rgba(255,255,255,0.85);
+    border-radius: 20px; top: 20%;
+    animation: sCloudDrift 22s linear infinite;
+}
+.s-cloud.c2 { top: 55%; animation-delay: 8s; animation-duration: 30s; transform: scale(0.7); }
+@keyframes sCloudDrift { from{transform:translateX(-90px)} to{transform:translateX(280px)} }
+.s-floor {
+    position: absolute; bottom: 0; left: 0; right: 0; height: 26%;
+    background: linear-gradient(180deg, #5a3d20 0%, #2a1a0c 100%);
+    box-shadow: inset 0 12px 30px rgba(0,0,0,0.5);
+}
+.s-student {
+    position: absolute; bottom: 22%;
+    width: 26px; height: 68px;
+    background: linear-gradient(180deg, #0a0a0a, #000);
+    border-radius: 40% 40% 10% 10%;
+    animation: sWalk 26s linear infinite;
+    left: 100%; opacity: 0;
+}
+.s-student::before {
+    content: ''; position: absolute;
+    width: 22px; height: 22px;
+    background: #0a0a0a; border-radius: 50%;
+    top: -20px; left: 2px;
+}
+.s-student.s2 { animation-delay: 12s; height: 60px; width: 22px; }
+@keyframes sWalk {
+    0%,55% { left: 100%; opacity: 0; }
+    56% { opacity: 1; }
+    60% { left: 95%; }
+    85% { left: -60px; opacity: 1; }
+    86%,100% { left: -60px; opacity: 0; }
+}
+
+/* ============ НЕБО ============ */
+.scene-sky {
+    background: linear-gradient(180deg, #1a1a4a 0%, #3a2a6a 35%, #7a4a8a 60%, #d8788a 85%, #f0a080 100%);
+}
+.sky-stars {
+    position: absolute; width: 2px; height: 2px;
+    background: white; border-radius: 50%;
+    top: 0; left: 0;
+    box-shadow:
+        120px 60px 0 #fff, 340px 30px 0 #fff, 80px 140px 0 #fff,
+        260px 100px 0 #fff, 420px 180px 0 #fff, 180px 60px 0 #fff,
+        520px 90px 0 #fff, 600px 40px 0 #fff, 720px 130px 0 #fff,
+        900px 70px 0 #fff, 1050px 120px 0 #fff, 1180px 60px 0 #fff,
+        200px 200px 0 #fff, 480px 240px 0 #fff, 800px 210px 0 #fff;
+    opacity: 0.75;
+    animation: skyTwinkle 5s ease-in-out infinite alternate;
+}
+@keyframes skyTwinkle { from{opacity:0.5} to{opacity:1} }
+
+.sky-branch {
+    position: absolute; top: 4%; left: -8%;
+    width: 55%; height: 30%;
+    transform-origin: left top;
+    animation: branchSway 8s ease-in-out infinite alternate;
+}
+@keyframes branchSway { from{transform:rotate(-1deg)} to{transform:rotate(2deg)} }
+.sky-branch::before {
+    content: ''; position: absolute;
+    top: 22px; left: 0; right: 20%;
+    height: 14px;
+    background: linear-gradient(90deg, #1a0a04 0%, #3a1a08 60%, transparent 100%);
+    border-radius: 0 100% 100% 0;
+    transform: rotate(-8deg);
+}
+.sky-leaf {
+    position: absolute;
+    width: 24px; height: 14px;
+    background: radial-gradient(ellipse at 30% 30%, #2a5a3a, #0a1a10);
+    border-radius: 50%;
+}
+.sky-leaf:nth-child(1){top:8px; left:5%; transform:rotate(-20deg)}
+.sky-leaf:nth-child(2){top:18px; left:14%; transform:rotate(15deg)}
+.sky-leaf:nth-child(3){top:2px; left:22%; transform:rotate(-40deg)}
+.sky-leaf:nth-child(4){top:35px; left:30%; transform:rotate(35deg)}
+.sky-leaf:nth-child(5){top:60px; left:38%; transform:rotate(-10deg)}
+.sky-leaf:nth-child(6){top:75px; left:48%; transform:rotate(25deg)}
+
+.sky-leg {
+    position: absolute;
+    bottom: 12%; right: 12%;
+    width: 130px; height: 130px;
+    transform-origin: bottom center;
+    animation: legSwing 3.5s ease-in-out infinite alternate;
+}
+@keyframes legSwing { from{transform:rotate(-8deg)} to{transform:rotate(8deg)} }
+.sky-leg .leg {
+    position: absolute;
+    bottom: 0; left: 50px;
+    width: 26px; height: 80px;
+    background: linear-gradient(180deg, #3a2518 0%, #1a0a04 100%);
+    border-radius: 14px 14px 8px 8px;
+}
+.sky-leg .foot {
+    position: absolute;
+    bottom: -4px; left: 38px;
+    width: 50px; height: 20px;
+    background: linear-gradient(180deg, #1a0a04 0%, #050202 100%);
+    border-radius: 10px 6px 6px 10px;
+}
+.sky-leg .jeans {
+    position: absolute;
+    bottom: 60px; left: 48px;
+    width: 30px; height: 40px;
+    background: linear-gradient(180deg, #1a1a4a 0%, #0a0a20 100%);
+    border-radius: 8px;
+}
+
+.shooting-star {
+    position: absolute;
+    top: 15%; left: -10%;
+    width: 3px; height: 3px;
+    background: white; border-radius: 50%;
+    box-shadow: 0 0 12px white, 0 0 25px white;
+    animation: shoot 9s ease-in infinite;
+}
+.shooting-star::after {
+    content: ''; position: absolute;
+    top: 0; right: 0;
+    width: 100px; height: 2px;
+    background: linear-gradient(-90deg, white, transparent);
+    border-radius: 2px;
+}
+.shooting-star.s2 { top: 8%; animation-delay: 4.5s; animation-duration: 11s; }
+@keyframes shoot {
+    0%, 88% { transform: translate(0,0); opacity: 0; }
+    89%, 92% { opacity: 1; }
+    100% { transform: translate(120vw, 55vh); opacity: 0; }
+}
+
+/* ============ КОМНАТА ============ */
+.scene-room {
+    background: linear-gradient(180deg, #080310 0%, #120818 60%, #080310 100%);
+}
+.room-wall {
+    position: absolute; inset: 0;
+    background:
+        radial-gradient(circle at 68% 38%, rgba(120,60,180,0.25) 0%, transparent 45%),
+        linear-gradient(180deg, #080310 0%, #1a0a2a 100%);
+}
+.room-window {
+    position: absolute;
+    top: 12%; right: 8%;
+    width: 32%; height: 48%;
+    background:
+        radial-gradient(1.5px 1.5px at 18% 62%, #FFE080, transparent 3px),
+        radial-gradient(1.5px 1.5px at 42% 72%, #80E0FF, transparent 3px),
+        radial-gradient(1.5px 1.5px at 65% 58%, #FF80C0, transparent 3px),
+        radial-gradient(1.5px 1.5px at 82% 68%, #FFE080, transparent 3px),
+        radial-gradient(1.5px 1.5px at 28% 78%, #A0C0FF, transparent 3px),
+        linear-gradient(180deg, #0a0a30 0%, #1a1a50 60%, #0f0f40 100%);
+    border: 5px solid #0a0510;
+    box-shadow: 0 0 50px rgba(100,150,255,0.2), inset 0 0 30px rgba(60,100,200,0.15);
+    overflow: hidden;
+}
+.room-window::before, .room-window::after { content: ''; position: absolute; background: #0a0510; z-index: 2; }
+.room-window::before { top: 50%; left: 0; right: 0; height: 4px; transform: translateY(-50%); }
+.room-window::after { left: 50%; top: 0; bottom: 0; width: 4px; transform: translateX(-50%); }
+.room-city-lights {
+    position: absolute; bottom: 0; left: 0; right: 0; height: 55%;
+    background:
+        repeating-linear-gradient(90deg, transparent 0, transparent 8px, #0a0a30 8px, #0a0a30 16px, transparent 16px, transparent 30px, #0a0a25 30px, #0a0a25 40px);
+    opacity: 0.7;
+    animation: cityShift 20s linear infinite;
+}
+@keyframes cityShift { from{transform:translateX(0)} to{transform:translateX(-40px)} }
+.room-desk {
+    position: absolute;
+    bottom: 22%; left: 8%; right: 40%;
+    height: 6px;
+    background: linear-gradient(180deg, #2a1a3a 0%, #0a0510 100%);
+}
+.room-monitor {
+    position: absolute;
+    bottom: 28%; left: 30%;
+    width: 90px; height: 60px;
+    background: linear-gradient(180deg, #1a3a5a, #0a1a3a);
+    border: 3px solid #0a0510;
+    box-shadow: 0 0 50px rgba(100,180,255,0.4);
+    border-radius: 5px;
+    overflow: hidden;
+}
+.room-monitor::before {
+    content: ''; position: absolute; inset: 4px;
+    background: repeating-linear-gradient(180deg,
+        transparent 0, transparent 4px,
+        #40C0FF 4px, #40C0FF 5px,
+        transparent 5px, transparent 9px,
+        #A0E0FF 9px, #A0E0FF 10px,
+        transparent 10px, transparent 14px);
+    animation: codeScroll 3s linear infinite;
+    opacity: 0.85;
+}
+@keyframes codeScroll { from{transform:translateY(0)} to{transform:translateY(-14px)} }
+.room-guy {
+    position: absolute;
+    bottom: 20%; left: 12%;
+    width: 90px; height: 130px;
+}
+.guy-body {
+    position: absolute;
+    bottom: 0; left: 18px;
+    width: 55px; height: 80px;
+    background: linear-gradient(180deg, #2a1a3a 0%, #0a0510 100%);
+    border-radius: 40% 40% 15% 15%;
+}
+.guy-head {
+    position: absolute;
+    bottom: 72px; left: 22px;
+    width: 46px; height: 46px;
+    background: radial-gradient(circle at 40% 40%, #3a2a4a 0%, #150820 100%);
+    border-radius: 50%;
+    transform-origin: bottom center;
+    animation: headTurn 16s ease-in-out infinite;
+    box-shadow: 0 0 20px rgba(80,40,140,0.5);
+}
+@keyframes headTurn {
+    0%, 55% { transform: rotate(0deg); }
+    65%, 72% { transform: rotate(-22deg); }
+    82%, 100% { transform: rotate(0deg); }
+}
+.room-coffee {
+    position: absolute;
+    bottom: 24%; left: 20%;
+    width: 18px; height: 22px;
+    background: linear-gradient(180deg, #d0d0d0 0%, #808080 100%);
+    border-radius: 3px 3px 6px 6px;
+}
+.room-coffee::after {
+    content: ''; position: absolute;
+    top: -30px; left: 50%;
+    width: 3px; height: 30px;
+    background: linear-gradient(180deg, transparent, rgba(255,255,255,0.5), transparent);
+    transform: translateX(-50%);
+    animation: steam 3s ease-in-out infinite;
+    filter: blur(1.5px);
+}
+@keyframes steam {
+    0% { opacity: 0; transform: translate(-50%, 5px) scaleY(0.5); }
+    40% { opacity: 0.7; transform: translate(-50%, -10px) scaleY(1); }
+    100% { opacity: 0; transform: translate(-50%, -25px) scaleY(0.7); }
+}
+
+/* ============ ЛЕС ============ */
+.scene-forest {
+    background: linear-gradient(180deg, #061410 0%, #04100a 50%, #010604 100%);
+}
+.forest-fog {
+    position: absolute; inset: 0;
+    background:
+        radial-gradient(ellipse at 40% 30%, rgba(120,180,150,0.18) 0%, transparent 55%),
+        radial-gradient(ellipse at 60% 65%, rgba(60,130,100,0.14) 0%, transparent 60%);
+    animation: fogDrift 22s ease-in-out infinite alternate;
+}
+@keyframes fogDrift { from{opacity:0.55} to{opacity:0.95} }
+.forest-trees { position: absolute; inset: 0; }
+.fir { position: absolute; bottom: 0; }
+.fir .fir-l {
+    position: absolute;
+    left: 50%; transform: translateX(-50%);
+    width: 0; height: 0;
+    border-left: solid transparent;
+    border-right: solid transparent;
+    border-bottom: solid #0a2818;
+}
+.fir .l1 { border-left-width: 28px; border-right-width: 28px; border-bottom-width: 80px; bottom: 200px; }
+.fir .l2 { border-left-width: 42px; border-right-width: 42px; border-bottom-width: 110px; bottom: 120px; }
+.fir .l3 { border-left-width: 56px; border-right-width: 56px; border-bottom-width: 130px; bottom: 20px; }
+.fir .trunk {
+    position: absolute;
+    bottom: 0; left: 50%; transform: translateX(-50%);
+    width: 10px; height: 40px;
+    background: linear-gradient(180deg, #1a0a04 0%, #050202 100%);
+}
+.fir.far  { opacity: 0.45; transform: scale(0.75); }
+.fir.mid  { opacity: 0.75; transform: scale(0.9); }
+.rain-drops { position: absolute; inset: 0; overflow: hidden; }
+.rain-drop {
+    position: absolute;
+    width: 2px; height: 14px;
+    background: linear-gradient(180deg, transparent, rgba(150,220,200,0.7));
+    border-radius: 50%;
+    animation: dropFall 3.5s linear infinite;
+}
+@keyframes dropFall {
+    0% { transform: translateY(-20px); opacity: 0; }
+    10%, 85% { opacity: 1; }
+    100% { transform: translateY(105vh); opacity: 0; }
+}
+
+/* ============ ГОРОД ============ */
+.scene-city {
+    background: linear-gradient(180deg, #05010f 0%, #14062e 35%, #2a0638 60%, #0a0210 100%);
+}
+.city-stars {
+    position: absolute;
+    width: 2px; height: 2px;
+    background: white; border-radius: 50%;
+    box-shadow:
+        120px 40px 0 #fff, 340px 80px 0 #fff, 80px 120px 0 #fff,
+        260px 60px 0 #fff, 620px 40px 0 #fff, 480px 90px 0 #fff,
+        800px 100px 0 #fff, 950px 60px 0 #fff, 1100px 130px 0 #fff,
+        1300px 80px 0 #fff;
+    opacity: 0.6;
+}
+.city-buildings {
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 55%;
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-around;
+    padding: 0 2%;
+    gap: 4px;
+}
+.bldg {
+    flex: 1;
+    background: linear-gradient(180deg, #0a0210 0%, #050108 100%);
+    border: 1px solid rgba(255,100,200,0.06);
+    position: relative;
+    min-width: 0;
+}
+.bldg::before {
+    content: ''; position: absolute; inset: 4px;
+    background-image:
+        radial-gradient(1.5px 1.5px at 6px 6px, #FFE080, transparent),
+        radial-gradient(1.5px 1.5px at 18px 6px, #80E0FF, transparent),
+        radial-gradient(1.5px 1.5px at 10px 18px, #FF80C0, transparent),
+        radial-gradient(1.5px 1.5px at 22px 22px, #FFE080, transparent),
+        radial-gradient(1.5px 1.5px at 14px 30px, #A0C0FF, transparent);
+    background-size: 32px 40px;
+    opacity: 0.9;
+}
+.bldg.h1 { height: 60%; } .bldg.h2 { height: 85%; } .bldg.h3 { height: 45%; }
+.bldg.h4 { height: 75%; } .bldg.h5 { height: 55%; } .bldg.h6 { height: 90%; }
+.bldg.h7 { height: 65%; } .bldg.h8 { height: 50%; }
+.city-neon {
+    position: absolute;
+    bottom: 58%; left: 20%;
+    width: 50px; height: 6px;
+    background: #FF40A0;
+    box-shadow: 0 0 20px #FF40A0, 0 0 45px #FF40A0;
+    border-radius: 3px;
+    animation: neonFlick 4s ease-in-out infinite;
+}
+.city-neon.n2 {
+    left: 62%; width: 70px; background: #40E0FF;
+    box-shadow: 0 0 20px #40E0FF, 0 0 45px #40E0FF;
+    animation-delay: 1.2s;
+}
+.city-neon.n3 {
+    left: 40%; bottom: 68%; width: 30px; background: #B040FF;
+    box-shadow: 0 0 20px #B040FF, 0 0 45px #B040FF;
+    animation-delay: 2.1s;
+}
+@keyframes neonFlick {
+    0%, 100%, 48%, 50%, 80%, 82% { opacity: 1; }
+    49% { opacity: 0.3; }
+    81% { opacity: 0.5; }
+}
+.city-flyer {
+    position: absolute;
+    width: 44px; height: 3px;
+    background: linear-gradient(90deg, transparent, #FF40A0, #FF80C0);
+    border-radius: 3px;
+    box-shadow: 0 0 15px #FF40A0, 0 0 30px rgba(255,64,160,0.5);
+    animation: flyer 8s linear infinite;
+    top: 30%;
+}
+.city-flyer.f2 { top: 18%; animation-delay: 3s; animation-duration: 10s;
+    background: linear-gradient(90deg, transparent, #40E0FF, #80E0FF);
+    box-shadow: 0 0 15px #40E0FF;
+}
+.city-flyer.f3 { top: 42%; animation-delay: 6s; animation-duration: 12s;
+    background: linear-gradient(90deg, transparent, #B040FF, #D080FF);
+    box-shadow: 0 0 15px #B040FF;
+}
+@keyframes flyer {
+    from { transform: translateX(-100px); opacity: 0; }
+    8%, 92% { opacity: 1; }
+    to { transform: translateX(calc(100vw + 100px)); opacity: 0; }
+}

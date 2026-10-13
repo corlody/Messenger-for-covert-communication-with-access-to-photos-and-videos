@@ -1,0 +1,13 @@
+{
+  "name": "hana-koto-relay",
+  "version": "1.0.0",
+  "description": "E2E relay for Hana-Koto messenger",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "engines": { "node": ">=18" },
+  "dependencies": {
+    "ws": "^8.18.0"
+  }
+}
