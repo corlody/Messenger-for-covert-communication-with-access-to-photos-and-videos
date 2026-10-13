@@ -299,10 +299,10 @@ function onTabChange(name) {
 // ---------- Контакты ----------
 async function refreshContacts() {
     state.contacts = await Contacts.listContacts();
-    renderContactsList();
+    await renderContactsList();
 }
 
-function renderContactsList() {
+async function renderContactsList() {
     const list = document.getElementById('contactsList');
     list.innerHTML = '';
 
